@@ -209,14 +209,8 @@ cd PairedMaps
 
 ---
 
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
 <div align="center">
 
-Built for PaperMC
+Made by ranawise
 
 </div>
