@@ -40,80 +40,65 @@ public class CommandRegistrar {
     private final MessageManager messageManager;
 
     public CommandRegistrar(PairedMapsPlugin plugin, MinimapManager minimapManager,
-                            MessageManager messageManager) {
-        this.plugin         = plugin;
+            MessageManager messageManager) {
+        this.plugin = plugin;
         this.minimapManager = minimapManager;
         this.messageManager = messageManager;
     }
 
     public void register() {
-        plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event ->
-                event.registrar().register(
-                        Commands.literal("pm")
-                                .requires(src -> src.getSender().hasPermission("pairedmaps.admin"))
+        plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
+                Commands.literal("pm")
+                        .requires(src -> src.getSender().hasPermission("pairedmaps.admin"))
 
-                                .then(Commands.literal("add")
-                                        .then(Commands.argument("map_start", ArgumentTypes.blockPosition())
-                                                .then(Commands.argument("map_end", ArgumentTypes.blockPosition())
-                                                        
-                                                        .then(Commands.argument("region_start", ArgumentTypes.blockPosition())
-                                                                .then(Commands.argument("region_end", ArgumentTypes.blockPosition())
-                                                                        .executes(this::executeAdd)
-                                                                )
-                                                        )
-                                                        
-                                                        .then(Commands.argument("region_name", StringArgumentType.word())
-                                                                .suggests((ctx, builder) -> {
-                                                                    if (ctx.getSource().getSender() instanceof Player p) {
-                                                                        WorldGuardHook.getRegionNames(p.getWorld())
-                                                                                .forEach(builder::suggest);
-                                                                    }
-                                                                    return builder.buildFuture();
-                                                                })
-                                                                .executes(this::executeAddWG)
-                                                        )
-                                                )
-                                        )
-                                )
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("map_start", ArgumentTypes.blockPosition())
+                                        .then(Commands.argument("map_end", ArgumentTypes.blockPosition())
 
-                                .then(Commands.literal("list")
-                                        .executes(this::executeList)
-                                )
+                                                .then(Commands.argument("region_start", ArgumentTypes.blockPosition())
+                                                        .then(Commands
+                                                                .argument("region_end", ArgumentTypes.blockPosition())
+                                                                .executes(this::executeAdd)))
 
-                                .then(Commands.literal("remove")
-                                        .then(Commands.argument("id", IntegerArgumentType.integer(1))
-                                                .suggests((ctx, builder) -> {
-                                                    minimapManager.getAllMinimaps()
-                                                            .forEach(r -> builder.suggest(r.getId()));
-                                                    return builder.buildFuture();
-                                                })
-                                                .executes(this::executeRemove)
-                                        )
-                                )
+                                                .then(Commands.argument("region_name", StringArgumentType.word())
+                                                        .suggests((ctx, builder) -> {
+                                                            if (ctx.getSource().getSender() instanceof Player p) {
+                                                                WorldGuardHook.getRegionNames(p.getWorld())
+                                                                        .forEach(builder::suggest);
+                                                            }
+                                                            return builder.buildFuture();
+                                                        })
+                                                        .executes(this::executeAddWG)))))
 
-                                .then(Commands.literal("reload")
-                                        .executes(this::executeReload)
-                                )
+                        .then(Commands.literal("list")
+                                .executes(this::executeList))
 
-                                .then(Commands.literal("reset")
-                                        .executes(this::executeReset)
-                                )
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("id", IntegerArgumentType.integer(1))
+                                        .suggests((ctx, builder) -> {
+                                            minimapManager.getAllMinimaps()
+                                                    .forEach(r -> builder.suggest(r.getId()));
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(this::executeRemove)))
 
-                                .then(Commands.literal("info")
-                                        .then(Commands.argument("id", IntegerArgumentType.integer(1))
-                                                .suggests((ctx, builder) -> {
-                                                    minimapManager.getAllMinimaps()
-                                                            .forEach(r -> builder.suggest(r.getId()));
-                                                    return builder.buildFuture();
-                                                })
-                                                .executes(this::executeInfo)
-                                        )
-                                )
-                                .build(),
-                        "PairedMaps admin commands",
-                        List.of("pairedmaps")
-                )
-        );
+                        .then(Commands.literal("reload")
+                                .executes(this::executeReload))
+
+                        .then(Commands.literal("reset")
+                                .executes(this::executeReset))
+
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("id", IntegerArgumentType.integer(1))
+                                        .suggests((ctx, builder) -> {
+                                            minimapManager.getAllMinimaps()
+                                                    .forEach(r -> builder.suggest(r.getId()));
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(this::executeInfo)))
+                        .build(),
+                "PairedMaps admin commands",
+                List.of("pairedmaps")));
     }
 
     private int executeAdd(CommandContext<CommandSourceStack> ctx) {
@@ -123,16 +108,17 @@ public class CommandRegistrar {
         }
 
         try {
-            BlockPosition mapStart = ctx.getArgument("map_start",   BlockPositionResolver.class).resolve(ctx.getSource());
-            BlockPosition mapEnd   = ctx.getArgument("map_end",     BlockPositionResolver.class).resolve(ctx.getSource());
-            BlockPosition regStart = ctx.getArgument("region_start", BlockPositionResolver.class).resolve(ctx.getSource());
-            BlockPosition regEnd   = ctx.getArgument("region_end",  BlockPositionResolver.class).resolve(ctx.getSource());
+            BlockPosition mapStart = ctx.getArgument("map_start", BlockPositionResolver.class).resolve(ctx.getSource());
+            BlockPosition mapEnd = ctx.getArgument("map_end", BlockPositionResolver.class).resolve(ctx.getSource());
+            BlockPosition regStart = ctx.getArgument("region_start", BlockPositionResolver.class)
+                    .resolve(ctx.getSource());
+            BlockPosition regEnd = ctx.getArgument("region_end", BlockPositionResolver.class).resolve(ctx.getSource());
 
             return createMinimap(player,
                     mapStart.x(), mapStart.y(), mapStart.z(),
-                    mapEnd.x(),   mapEnd.y(),   mapEnd.z(),
+                    mapEnd.x(), mapEnd.y(), mapEnd.z(),
                     regStart.x(), regStart.y(), regStart.z(),
-                    regEnd.x(),   regEnd.y(),   regEnd.z());
+                    regEnd.x(), regEnd.y(), regEnd.z());
 
         } catch (SQLException | CommandSyntaxException e) {
             player.sendMessage(messageManager.get("db-error"));
@@ -148,9 +134,9 @@ public class CommandRegistrar {
         }
 
         try {
-            BlockPosition mapStart  = ctx.getArgument("map_start", BlockPositionResolver.class).resolve(ctx.getSource());
-            BlockPosition mapEnd    = ctx.getArgument("map_end",   BlockPositionResolver.class).resolve(ctx.getSource());
-            String regionName       = ctx.getArgument("region_name", String.class);
+            BlockPosition mapStart = ctx.getArgument("map_start", BlockPositionResolver.class).resolve(ctx.getSource());
+            BlockPosition mapEnd = ctx.getArgument("map_end", BlockPositionResolver.class).resolve(ctx.getSource());
+            String regionName = ctx.getArgument("region_name", String.class);
 
             var boundsOpt = WorldGuardHook.getRegionBounds(player.getWorld(), regionName);
             if (boundsOpt.isEmpty()) {
@@ -161,7 +147,7 @@ public class CommandRegistrar {
             WorldGuardHook.RegionBounds b = boundsOpt.get();
             return createMinimap(player,
                     mapStart.x(), mapStart.y(), mapStart.z(),
-                    mapEnd.x(),   mapEnd.y(),   mapEnd.z(),
+                    mapEnd.x(), mapEnd.y(), mapEnd.z(),
                     b.x1(), b.y1(), b.z1(),
                     b.x2(), b.y2(), b.z2());
 
@@ -173,10 +159,10 @@ public class CommandRegistrar {
     }
 
     private int createMinimap(Player player,
-                              double mapX1, double mapY1, double mapZ1,
-                              double mapX2, double mapY2, double mapZ2,
-                              double regX1, double regY1, double regZ1,
-                              double regX2, double regY2, double regZ2) throws SQLException {
+            double mapX1, double mapY1, double mapZ1,
+            double mapX2, double mapY2, double mapZ2,
+            double regX1, double regY1, double regZ1,
+            double regX2, double regY2, double regZ2) throws SQLException {
         String world = player.getWorld().getName();
 
         double regSx = Math.abs(regX2 - regX1);
@@ -191,10 +177,11 @@ public class CommandRegistrar {
         double mapSx = Math.abs(mapX2 - mapX1);
         double mapSz = Math.abs(mapZ2 - mapZ1);
 
-        if (mapSx == 0) mapSx = 1;
-        if (mapSz == 0) mapSz = 1;
+        if (mapSx == 0)
+            mapSx = 1;
+        if (mapSz == 0)
+            mapSz = 1;
 
-        // Auto-Scale Logic: Use X-scale for the Y-axis to ensure perfect proportions
         double xScale = mapSx / regSx;
         double correctedMapY2 = mapY1 + (regSy * xScale);
 
@@ -252,13 +239,12 @@ public class CommandRegistrar {
                             "reg_x2", String.valueOf((int) rec.getRegX2()),
                             "reg_y2", String.valueOf((int) rec.getRegY2()),
                             "reg_z2", String.valueOf((int) rec.getRegZ2())),
-                    messageManager.get("minimap-list-lore-dots", "dots", String.valueOf(dots))
-            ));
+                    messageManager.get("minimap-list-lore-dots", "dots", String.valueOf(dots))));
 
             lore.add(Component.text(" "));
             lore.add(Component.text("§e§lLEFT CLICK §7to get map item"));
             lore.add(Component.text("§c§lRIGHT CLICK §7to remove minimap"));
-            
+
             Component hint = messageManager.get("minimap-list-click-hint");
             meta.lore(lore);
 
@@ -316,32 +302,31 @@ public class CommandRegistrar {
             return 0;
         }
 
-        MinimapRecord rec  = opt.get();
-        int dots           = plugin.getDisplayManager().getActiveDotCount(id);
-        int interval       = plugin.getConfigManager().getUpdateIntervalTicks();
+        MinimapRecord rec = opt.get();
+        int dots = plugin.getDisplayManager().getActiveDotCount(id);
+        int interval = plugin.getConfigManager().getUpdateIntervalTicks();
 
         ctx.getSource().getSender().sendMessage(messageManager.get("minimap-info",
-                "id",       String.valueOf(id),
-                "world",    rec.getWorld(),
-                "map_x1",   String.valueOf((int) rec.getMapX1()),
-                "map_y1",   String.valueOf((int) rec.getMapY1()),
-                "map_z1",   String.valueOf((int) rec.getMapZ1()),
-                "map_x2",   String.valueOf((int) rec.getMapX2()),
-                "map_y2",   String.valueOf((int) rec.getMapY2()),
-                "map_z2",   String.valueOf((int) rec.getMapZ2()),
-                "reg_x1",   String.valueOf((int) rec.getRegX1()),
-                "reg_y1",   String.valueOf((int) rec.getRegY1()),
-                "reg_z1",   String.valueOf((int) rec.getRegZ1()),
-                "reg_x2",   String.valueOf((int) rec.getRegX2()),
-                "reg_y2",   String.valueOf((int) rec.getRegY2()),
-                "reg_z2",   String.valueOf((int) rec.getRegZ2()),
-                "scale_x",  String.format("%.2f", rec.mapSizeX() / rec.regSizeX()),
-                "scale_y",  String.format("%.2f", rec.mapSizeY() / rec.regSizeY()),
-                "scale_z",  String.format("%.2f", rec.mapSizeZ() / rec.regSizeZ()),
+                "id", String.valueOf(id),
+                "world", rec.getWorld(),
+                "map_x1", String.valueOf((int) rec.getMapX1()),
+                "map_y1", String.valueOf((int) rec.getMapY1()),
+                "map_z1", String.valueOf((int) rec.getMapZ1()),
+                "map_x2", String.valueOf((int) rec.getMapX2()),
+                "map_y2", String.valueOf((int) rec.getMapY2()),
+                "map_z2", String.valueOf((int) rec.getMapZ2()),
+                "reg_x1", String.valueOf((int) rec.getRegX1()),
+                "reg_y1", String.valueOf((int) rec.getRegY1()),
+                "reg_z1", String.valueOf((int) rec.getRegZ1()),
+                "reg_x2", String.valueOf((int) rec.getRegX2()),
+                "reg_y2", String.valueOf((int) rec.getRegY2()),
+                "reg_z2", String.valueOf((int) rec.getRegZ2()),
+                "scale_x", String.format("%.2f", rec.mapSizeX() / rec.regSizeX()),
+                "scale_y", String.format("%.2f", rec.mapSizeY() / rec.regSizeY()),
+                "scale_z", String.format("%.2f", rec.mapSizeZ() / rec.regSizeZ()),
                 "entities", String.valueOf(dots),
                 "interval", String.valueOf(interval),
-                "created",  rec.getCreatedAt()
-        ));
+                "created", rec.getCreatedAt()));
         return 1;
     }
 
