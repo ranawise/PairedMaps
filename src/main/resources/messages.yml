@@ -1,0 +1,38 @@
+prefix: "<dark_gray>[<gold>PairedMaps</gold>] </dark_gray>"
+
+minimap-added: "<green>Minimap <id> created successfully.</green>"
+minimap-removed: "<green>Minimap <id> removed.</green>"
+minimap-not-found: "<red>No minimap found with ID <id>.</red>"
+
+minimap-gui-title: "PairedMaps - Minimaps"
+minimap-list-header: "<gold>Minimaps (<count>)</gold>"
+minimap-list-empty: "<yellow>No minimaps exist yet. Use /pm add to create one.</yellow>"
+minimap-list-item-name: "<gold>Minimap #<id></gold>"
+minimap-list-lore-world: "<gray>World: <white><world></white></gray>"
+minimap-list-lore-map: "<gray>Map: (<map_x1>,<map_y1>,<map_z1>) → (<map_x2>,<map_y2>,<map_z2>)</gray>"
+minimap-list-lore-region: "<gray>Region: (<reg_x1>,<reg_y1>,<reg_z1>) → (<reg_x2>,<reg_y2>,<reg_z2>)</gray>"
+minimap-list-lore-dots: "<yellow>Active dots: <dots></yellow>"
+minimap-list-click-hint: ""
+
+minimap-info: |
+  <gold>Minimap <id></gold>
+  <gray>World: <white><world></white></gray>
+  <gray>Map: (<map_x1>, <map_y1>, <map_z1>) → (<map_x2>, <map_y2>, <map_z2>)</gray>
+  <gray>Region: (<reg_x1>, <reg_y1>, <reg_z1>) → (<reg_x2>, <reg_y2>, <reg_z2>)</gray>
+  <gray>Scale: X=<scale_x> Y=<scale_y> Z=<scale_z></gray>
+  <gray>Active entities: <white><entities></white></gray>
+  <gray>Tick interval: <white><interval></white></gray>
+  <gray>Created: <white><created></white></gray>
+
+aspect-ratio-mismatch: "<red>Map and region ratios do not match (map=<map_size>, region=<region_size>). Use equal proportions or cube-to-cube.</red><gray> Example: <example_cmd></gray>"
+aspect-ratio-non-3d: "<red>Map and region must both be 3D volumes (no zero-size axis). Got map=<map_size>, region=<region_size>.</red><gray> Example: <example_cmd></gray>"
+
+wg-region-not-found: "<red>WorldGuard region '<name>' not found in your current world.</red>"
+
+reload-success: "<green>Configuration reloaded.</green>"
+reset-success: "<green>All display entities reset.</green>"
+no-permission: "<red>You lack the pairedmaps.admin permission.</red>"
+player-only: "<red>This command can only be used by players.</red>"
+db-error: "<red>A database error occurred. Check the console for details.</red>"
+live-map-given: "<green>Live minimap item for ID <id> added to your inventory.</green>"
+region-map-given: "<green>Region terrain map for Minimap #<id> added to your inventory! Hold it to see the arena.</green>"

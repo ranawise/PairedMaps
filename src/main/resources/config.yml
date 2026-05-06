@@ -1,0 +1,25 @@
+mysql:
+  mode: mysql
+  host: mysql.discord.sgp2.shockbyte.host
+  port: 3306
+  database: 7871431992-databaselm
+  username: 7871431992-databaselm-admin
+  password: d9a6cce6795b3ccf
+  pool-size: 5
+
+update-interval-ticks: 1
+dot-scale: 0.1
+player-dot-color: "#FF0000"
+item-dot-color: "#FFFFFF"
+item-flash-threshold-ticks: 60
+death-effect-duration-ticks: 60
+
+player-head-dots: false
+item-dots: true
+terrain-render: false
+terrain-samples-per-axis: 20
+terrain-dot-scale: 0.08
+death-effect: true
+explosion-ring: true
+
+aspect-ratio-epsilon: 0.05

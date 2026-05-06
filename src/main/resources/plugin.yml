@@ -1,0 +1,9 @@
+name: PairedMaps
+version: ${version}
+main: com.pairedmaps.PairedMapsPlugin
+api-version: '1.21'
+depend: [WorldGuard]
+permissions:
+  pairedmaps.admin:
+    description: Allows access to all PairedMaps commands
+    default: op
