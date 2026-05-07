@@ -1,10 +1,10 @@
 mysql:
   mode: mysql
-  host: mysql.discord.sgp2.shockbyte.host
+  host: localhost
   port: 3306
-  database: 7871431992-databaselm
-  username: 7871431992-databaselm-admin
-  password: d9a6cce6795b3ccf
+  database: pairedmaps
+  username: root
+  password: ''
   pool-size: 5
 
 update-interval-ticks: 1
